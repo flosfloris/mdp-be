@@ -1,0 +1,32 @@
+# render.yaml — Blueprint per deploy su Render
+# Repo: mdp-be (backend)
+
+databases:
+  - name: festadeipiccoli-db
+    plan: free
+    databaseName: festadeipiccoli
+    user: festadeipiccoli_user
+    region: frankfurt
+
+services:
+  # Backend API
+  - type: web
+    name: mdp-be
+    runtime: node
+    plan: free
+    region: frankfurt
+    buildCommand: npm install
+    startCommand: node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: festadeipiccoli-db
+          property: connectionString
+      - key: CLERK_SECRET_KEY
+        sync: false
+      - key: CLERK_PUBLISHABLE_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
