@@ -72,15 +72,6 @@ app.use('/api/messaggi', require('./routes/messaggi'));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api', require('./routes/public'));
 
-// Serve React build in production
-if (NODE_ENV === 'production') {
-  const buildPath = path.join(__dirname, '../client/build');
-  app.use(express.static(buildPath));
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(buildPath, 'index.html'));
-  });
-}
-
 // 404 Handler
 app.use((req, res) => {
   res.status(404).json({ error: 'Not Found' });
