@@ -14,7 +14,25 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(__dirname, '../uploads');
 
 // Middleware: Security headers
-app.use(helmet());
+// CSP configurata per permettere Clerk auth + Google OAuth
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'", "https://*.clerk.accounts.dev", "https://challenges.cloudflare.com"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "blob:", "https://*.clerk.accounts.dev", "https://img.clerk.com", "https://*.googleusercontent.com"],
+        connectSrc: ["'self'", "https://*.clerk.accounts.dev", "https://api.clerk.com", "https://accounts.google.com"],
+        frameSrc: ["'self'", "https://*.clerk.accounts.dev", "https://accounts.google.com", "https://challenges.cloudflare.com"],
+        workerSrc: ["'self'", "blob:"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: false,
+  })
+);
 
 // Middleware: CORS
 app.use(
